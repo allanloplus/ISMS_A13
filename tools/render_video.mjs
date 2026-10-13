@@ -19,7 +19,7 @@ async function worker(w) {
   const from = w * per, to = Math.min(N, from + per);
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
   await page.goto("file://" + root + "/index.html?render");
-  await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(() => Promise.all([document.fonts.ready, window.charsReady]));
   const out = path.join(tmp, `seg${w}.mp4`);
   const ff = spawn("ffmpeg", ["-v", "error", "-y", "-f", "image2pipe", "-framerate", String(FPS), "-c:v", "mjpeg", "-i", "-",
     "-c:v", "libx264", "-preset", "medium", "-crf", "24", "-pix_fmt", "yuv420p", "-r", String(FPS), out], { stdio: ["pipe", "inherit", "inherit"] });

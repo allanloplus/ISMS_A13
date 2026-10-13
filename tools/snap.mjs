@@ -6,11 +6,11 @@ const out = process.argv[2] || "snaps";
 const browser = await chromium.launch({ executablePath: process.env.CHROME || undefined });
 const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
 await page.goto("file://" + root + "/index.html?render");
-await page.evaluate(() => document.fonts.ready);
+await page.evaluate(() => Promise.all([document.fonts.ready, window.charsReady]));
 const T = await page.evaluate(() => window.TIMELINE);
 for (const [i, s] of T.scenes.entries()) {
   const lt = s.lines[s.lines.length - 1];
-  const t = (lt.start + lt.end) / 2;
+  const t = lt.start + 0.8;
   await page.evaluate((t) => window.renderAt(t), t);
   await page.screenshot({ path: `${out}/s${String(i).padStart(2, "0")}_${s.id}.png` });
 }

@@ -18,7 +18,8 @@
 | `deck.js` | 投影片內容與台詞（**要改內容就改這裡**） |
 | `講稿.md` | 逐頁講稿（含時間碼） |
 | `audio/narration.mp3`、`timeline.js` | 旁白音軌與時間軸（自動產生） |
-| `docs/流程圖_原圖.png` | 原始流程圖參考 |
+| `characters/*.png` | 角色表情畫格（由設定圖自動裁切去背） |
+| `docs/` | 原始流程圖、Allan 與阿拉蕾角色設定圖 |
 
 ## 播放
 
@@ -27,12 +28,15 @@
 ## 修改後重新產生
 
 ```bash
-pip install edge-tts            # 需要 ffmpeg、node、playwright
+pip install edge-tts pillow numpy scipy   # 需要 ffmpeg、node、playwright
+python3 tools/extract_chars.py docs/角色設定_Allan.jpg docs/角色設定_阿拉蕾.jpg  # 換角色圖時
 python3 tools/build_audio.py    # 依 deck.js 產生語音、narration.mp3、timeline.js
 node tools/snap.mjs snaps       # （選用）每頁截圖檢查版面
 node tools/render_video.mjs 24 4  # 逐格渲染 → video/*.mp4
 ```
 
-台詞欄位：`s` 講者（A=Allan、R=阿拉蕾）、`t` 字幕、`tts` 念法（如「8.13」念成「八點一三」）、`e` 表情（jump/shock/happy）。
+台詞欄位：`s` 講者（A=Allan、R=阿拉蕾）、`t` 字幕、`tts` 念法（如「8.13」念成「八點一三」）、`e` 情緒（jump/shock/happy）、`p` 講者表情、`r` 聽者反應。
 
-> 角色為自繪 SVG Q 版造型；阿拉蕾造型為致敬風格，若用於商業課程，建議改為自有角色或取得授權。
+表情畫格：Allan `smile talk laugh think scratch shock point wink worry`；阿拉蕾 `think talk laugh shock ask cry wink cheer`。說話時會在張嘴/閉嘴畫格間切換。
+
+> 角色依 `docs/` 內的 Allan Lo 與 AI 小助手阿拉蕾設定圖製作。
